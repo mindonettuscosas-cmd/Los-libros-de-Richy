@@ -33,6 +33,15 @@ export const getBookDetails = async (title: string): Promise<Partial<Book>> => {
   }
 };
 
+export const getAuthorBio = async (author: string): Promise<string> => {
+  const response = await ai.models.generateContent({
+    model: "gemini-3-flash-preview",
+    contents: `Escribe una biografía muy breve y profesional del autor/a "${author}". Incluye su nacionalidad, estilo principal y una lista de sus 3-5 libros más famosos. Formato: un párrafo corto seguido de una lista de obras destacadas. Todo en español.`,
+  });
+
+  return response.text || "No se pudo encontrar información sobre este autor.";
+};
+
 export const generateBookCover = async (title: string, author: string): Promise<string> => {
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',

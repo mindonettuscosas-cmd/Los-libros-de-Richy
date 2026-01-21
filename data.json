@@ -1,0 +1,85 @@
+
+[
+  {
+    "id": "1769000042106",
+    "title": "Dignos de ser humanos",
+    "author": "Rutger Bregman",
+    "year": 2020,
+    "description": "Un libro que desafía la creencia convencional de que los seres humanos son egoístas por naturaleza, argumentando a través de la historia y la ciencia que somos fundamentalmente cooperativos y bondadosos.",
+    "rating": 4,
+    "status": "Leído",
+    "coverUrl": "https://lh3.googleusercontent.com/u/0/d/1EWcccx2Tr1vvEm8W_A1UQaYOzJVBbgPG",
+    "genres": [
+      "No ficción",
+      "Historia",
+      "Psicología",
+      "Sociología",
+      "Filosofía"
+    ]
+  },
+  {
+    "id": "1768996788888",
+    "title": "El lector de cadáveres",
+    "author": "Antonio Garrido",
+    "year": 2011,
+    "description": "Inspirada en un personaje real, esta novela histórica se sitúa en la antigua China del siglo XIII y sigue la vida de Cí Song, un joven de origen humilde que, tras una serie de desgracias, se convierte en el primer forense de la historia al aplicar métodos científicos pioneros para resolver crímenes complejos y limpiar su nombre ante la corte imperial.",
+    "rating": 0,
+    "status": "Leyendo",
+    "coverUrl": "https://lh3.googleusercontent.com/u/0/d/1YhHBITLqUCSjd2ntlhcG7mwo689i8kiT",
+    "genres": [
+      "Novela histórica",
+      "Misterio",
+      "Ficción detectivesca",
+      "Suspense"
+    ]
+  },
+  {
+    "id": "1768930574778",
+    "title": "El cautivo",
+    "author": "Emma Lira",
+    "year": 2024,
+    "description": "Una novela histórica que narra la extraordinaria vida de un soldado español capturado por corsarios en el Mediterráneo del siglo XVI, profundizando en su cautiverio en Argel y su lucha por la identidad en un mundo dividido entre dos culturas enfrentadas.",
+    "rating": 3,
+    "status": "Leído",
+    "coverUrl": "https://lh3.googleusercontent.com/u/0/d/1SqoBCIboqGZtghrA-QTEnDbcVZCi9Cwy",
+    "genres": [
+      "Novela histórica",
+      "Aventura",
+      "Siglo XVI",
+      "Ficción biográfica",
+      "Drama"
+    ]
+  },
+  {
+    "id": "1768913874888",
+    "title": "La novia gitana",
+    "author": "Carmen Mola",
+    "year": 2018,
+    "description": "La inspectora Elena Blanco lidera una investigación para resolver el brutal asesinato de una joven gitana, cuyo crimen replica de forma idéntica el que sufrió su hermana siete años atrás.",
+    "rating": 3,
+    "status": "Leído",
+    "coverUrl": "https://lh3.googleusercontent.com/u/0/d/1_hV8O_YZv5bQUuOY8pDS5g0L5j4u_euf",
+    "genres": [
+      "Thriller",
+      "Policiaco",
+      "Misterio",
+      "Novela negra"
+    ]
+  },
+  {
+    "id": "1768913489885",
+    "title": "El mentiroso",
+    "author": "Mikel Santiago",
+    "year": 2020,
+    "description": "Un hombre se despierta en una fábrica abandonada junto al cadáver de un desconocido y un rastro de sangre, sin recordar nada de lo sucedido en las últimas horas, lo que desencadena un thriller psicológico ambientado en el País Vasco.",
+    "rating": 2,
+    "status": "Leído",
+    "coverUrl": "https://lh3.googleusercontent.com/u/0/d/1triVB1S49cdl2097doN2VtTUac_rTQQY",
+    "genres": [
+      "Thriller",
+      "Misterio",
+      "Suspense",
+      "Novela negra"
+    ]
+  }
+]
