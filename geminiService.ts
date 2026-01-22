@@ -1,11 +1,21 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { Book, BookStatus } from "./types";
+import { Book } from "./types";
 
-// Always use a named parameter for the API key
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Función auxiliar para obtener la instancia de IA de forma segura
+const getAIInstance = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    console.warn("API_KEY no detectada. Las funciones de IA no estarán disponibles hasta que se configure la variable de entorno.");
+    return null;
+  }
+  return new GoogleGenAI({ apiKey });
+};
 
 export const getBookDetails = async (title: string): Promise<Partial<Book>> => {
+  const ai = getAIInstance();
+  if (!ai) throw new Error("API Key faltante");
+
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: `Proporciona los detalles técnicos del libro titulado "${title}". Traduce todo al español.`,
@@ -34,6 +44,9 @@ export const getBookDetails = async (title: string): Promise<Partial<Book>> => {
 };
 
 export const getAuthorBio = async (author: string): Promise<string> => {
+  const ai = getAIInstance();
+  if (!ai) return "Configura tu API Key para ver biografías.";
+
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: `Escribe una biografía muy breve y profesional del autor/a "${author}". Incluye su nacionalidad, estilo principal y una lista de sus 3-5 libros más famosos. Formato: un párrafo corto seguido de una lista de obras destacadas. Todo en español.`,
@@ -43,6 +56,9 @@ export const getAuthorBio = async (author: string): Promise<string> => {
 };
 
 export const generateBookCover = async (title: string, author: string): Promise<string> => {
+  const ai = getAIInstance();
+  if (!ai) throw new Error("API Key faltante");
+
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',
     contents: {

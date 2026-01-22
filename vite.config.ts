@@ -5,11 +5,14 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   define: {
-    // Permite que el SDK de Gemini acceda a process.env.API_KEY de forma segura
+    'process.env.API_KEY': JSON.stringify(process.env.API_KEY),
     'process.env': process.env
   },
   build: {
     outDir: 'dist',
     target: 'esnext'
+  },
+  server: {
+    historyApiFallback: true
   }
 });

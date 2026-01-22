@@ -21,9 +21,9 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { Book, BookStatus } from './types.ts';
-import { getBookDetails, generateBookCover, getAuthorBio } from './geminiService.ts';
-import { StarRating } from './components/StarRating.tsx';
+import { Book, BookStatus } from './types';
+import { getBookDetails, generateBookCover, getAuthorBio } from './geminiService';
+import { StarRating } from './components/StarRating';
 
 // Contraseña de administrador
 const ADMIN_PASSWORD = 'aticus72';
