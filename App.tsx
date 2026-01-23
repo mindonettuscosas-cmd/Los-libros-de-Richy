@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { 
   Plus, 
@@ -144,6 +143,16 @@ const App: React.FC = () => {
     };
     reader.readAsText(file);
     e.target.value = '';
+  };
+
+  const downloadImage = () => {
+    if (!aiGeneratedImage) return;
+    const link = document.createElement('a');
+    link.href = aiGeneratedImage;
+    link.download = `${formData.title?.replace(/\s+/g, '_') || 'portada'}_generada.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleFetchBio = async (author: string) => {
@@ -492,7 +501,7 @@ const App: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 space-y-4">
+                    <div className="flex-1 space-y-4 text-left">
                       <div className="p-4 bg-slate-950/50 rounded-2xl border border-slate-800/50 space-y-3">
                         <label className="text-[9px] font-black uppercase text-rose-500 tracking-widest block">URL Portada (Drive o Web)</label>
                         <input 
@@ -567,10 +576,10 @@ const App: React.FC = () => {
                           <img src={aiGeneratedImage} className="w-full h-full object-cover" />
                         </div>
                         <button 
-                          onClick={() => { if(aiGeneratedImage) setFormData({...formData, coverUrl: aiGeneratedImage}); }}
-                          className="w-full py-3 bg-indigo-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2"
+                          onClick={downloadImage}
+                          className="w-full py-3 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-500 transition-all shadow-lg"
                         >
-                          <Check size={14} /> Usar Portada
+                          <Download size={14} /> Descargar Portada
                         </button>
                       </div>
                     )}
