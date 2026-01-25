@@ -280,21 +280,23 @@ const App: React.FC = () => {
               />
             </div>
 
-            {isAdmin && (
-              <div className="flex gap-2 bg-slate-900/50 p-1.5 rounded-2xl border border-slate-800 animate-in fade-in zoom-in duration-300">
+            {/* Panel de Importación/Exportación: Ahora visible para todos */}
+            <div className="flex gap-2 bg-slate-900/50 p-1.5 rounded-2xl border border-slate-800 animate-in fade-in zoom-in duration-300">
+              {isAdmin && (
                 <button onClick={handleExport} className="p-3 bg-slate-800 hover:bg-rose-600 text-rose-400 hover:text-white rounded-xl transition-all shadow-xl" title="Exportar">
                   <Download size={20} />
                 </button>
-                <label className="p-3 bg-slate-800 hover:bg-amber-500 text-amber-400 hover:text-black rounded-xl transition-all shadow-xl cursor-pointer" title="Importar">
-                  <Upload size={20} />
-                  <input type="file" accept=".json" onChange={handleImport} className="hidden" />
-                </label>
-              </div>
-            )}
+              )}
+              <label className="p-3 bg-slate-800 hover:bg-amber-500 text-amber-400 hover:text-black rounded-xl transition-all shadow-xl cursor-pointer" title="Importar">
+                <Upload size={20} />
+                <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+              </label>
+            </div>
 
             <button 
               onClick={() => isAdmin ? setIsAdmin(false) : setShowLogin(true)}
               className={`p-3.5 rounded-2xl transition-all ${isAdmin ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'bg-slate-800 text-slate-500'}`}
+              title={isAdmin ? "Cerrar Sesión Admin" : "Acceso Administrador"}
             >
               {isAdmin ? <Unlock size={20} /> : <Lock size={20} />}
             </button>
@@ -339,7 +341,7 @@ const App: React.FC = () => {
                   {book.status}
                 </div>
               </div>
-              <div className="space-y-1.5 px-1.5">
+              <div className="space-y-1.5 px-1.5 text-left">
                 <h3 className="font-black text-[13px] uppercase truncate text-slate-100 group-hover:text-rose-400 transition-colors tracking-tight leading-tight">
                   {book.title}
                 </h3>
@@ -357,13 +359,13 @@ const App: React.FC = () => {
 
       {selectedBook && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/98 backdrop-blur-2xl overflow-y-auto">
-          <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] overflow-hidden max-w-4xl w-full flex flex-col md:flex-row shadow-2xl max-h-[95vh] md:max-h-[92vh] animate-in zoom-in duration-300 relative">
+          <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] overflow-hidden max-w-4xl w-full flex flex-col md:flex-row shadow-2xl max-h-[95vh] md:max-h-[92vh] animate-in zoom-in duration-300 relative text-left">
             
             <div className="md:w-1/2 h-80 md:h-auto overflow-hidden bg-black flex items-center justify-center">
               <img src={formatDriveUrl(selectedBook.coverUrl)} className="w-full h-full object-cover md:object-contain" />
             </div>
             
-            <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto relative text-left">
+            <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto relative">
               <button onClick={() => setSelectedBook(null)} className="absolute top-6 right-6 text-slate-500 hover:text-white bg-slate-800 p-2.5 rounded-full transition-all z-20"><X size={20} /></button>
               
               <div className="space-y-6">
@@ -376,7 +378,7 @@ const App: React.FC = () => {
                   <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-slate-50 leading-tight">{selectedBook.title}</h2>
                   <button 
                     onClick={() => handleFetchBio(selectedBook.author)}
-                    className="text-xl text-rose-500 font-black italic hover:underline decoration-rose-500/30 underline-offset-4 transition-all group flex items-center gap-2 text-left"
+                    className="text-xl text-rose-500 font-black italic hover:underline decoration-rose-500/30 underline-offset-4 transition-all group flex items-center gap-2"
                   >
                     <span>de {selectedBook.author}</span>
                     <div className={`transition-transform duration-300 ${authorBio ? 'rotate-180' : ''}`}>
@@ -455,7 +457,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {isFormOpen && (
+      {isFormOpen && isAdmin && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/99 backdrop-blur-3xl overflow-y-auto">
           <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-8 md:p-12 max-w-5xl w-full shadow-2xl my-auto text-left animate-in slide-in-from-bottom-10 duration-500">
             <div className="flex justify-between items-center mb-8">
@@ -501,7 +503,7 @@ const App: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 space-y-4 text-left">
+                    <div className="flex-1 space-y-4">
                       <div className="p-4 bg-slate-950/50 rounded-2xl border border-slate-800/50 space-y-3">
                         <label className="text-[9px] font-black uppercase text-rose-500 tracking-widest block">URL Portada (Drive o Web)</label>
                         <input 
