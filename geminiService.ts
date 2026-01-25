@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { Book } from "./types";
 
@@ -12,13 +11,20 @@ const getAIInstance = () => {
   return new GoogleGenAI({ apiKey });
 };
 
-export const getBookDetails = async (title: string): Promise<Partial<Book>> => {
+export const getBookDetails = async (title: string, author?: string): Promise<Partial<Book>> => {
   const ai = getAIInstance();
   if (!ai) throw new Error("API Key faltante");
 
+  const authorContext = author ? ` del autor/a "${author}"` : "";
+  const prompt = `Proporciona los detalles técnicos del libro titulado "${title}"${authorContext}. Traduce todo al español.
+  Para las etiquetas (genres), sigue estrictamente estos CRITERIOS:
+  1. TAXONOMÍA: Tipo (Novela, Ensayo, etc.), Género/Tema (1-3), Enfoque (Divulgativo, Práctico, etc.) y Micro-etiquetas (conceptos clave).
+  2. NORMALIZACIÓN: Minúsculas, SIN TILDES, singular, máximo 2 palabras por etiqueta.
+  3. EXCLUSIONES: NO incluyas autor, editorial, año o idioma en las etiquetas.`;
+
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
-    contents: `Proporciona los detalles técnicos del libro titulado "${title}". Traduce todo al español.`,
+    contents: prompt,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -28,7 +34,11 @@ export const getBookDetails = async (title: string): Promise<Partial<Book>> => {
           author: { type: Type.STRING },
           year: { type: Type.INTEGER },
           description: { type: Type.STRING },
-          genres: { type: Type.ARRAY, items: { type: Type.STRING }, description: "Lista de 3-5 etiquetas de género o temática" },
+          genres: { 
+            type: Type.ARRAY, 
+            items: { type: Type.STRING }, 
+            description: "Lista de etiquetas normalizadas según la taxonomía especificada" 
+          },
         },
         required: ["title", "author", "year", "description", "genres"]
       },

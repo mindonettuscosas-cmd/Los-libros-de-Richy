@@ -149,7 +149,7 @@ const App: React.FC = () => {
     if (!aiGeneratedImage) return;
     const link = document.createElement('a');
     link.href = aiGeneratedImage;
-    link.download = `${formData.title?.replace(/\s+/g, '_') || 'portada'}_generada.png`;
+    link.download = `${formData.title?.replace(/\s+/g, '_') || 'portada'}_ia.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -174,10 +174,11 @@ const App: React.FC = () => {
   const handleAddTag = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && tagInput.trim()) {
       e.preventDefault();
-      if (!formData.genres?.includes(tagInput.trim())) {
+      const normalizedTag = tagInput.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      if (!formData.genres?.includes(normalizedTag)) {
         setFormData(prev => ({
           ...prev,
-          genres: [...(prev.genres || []), tagInput.trim()]
+          genres: [...(prev.genres || []), normalizedTag]
         }));
       }
       setTagInput('');
@@ -241,12 +242,15 @@ const App: React.FC = () => {
   };
 
   const handleAISuggest = async () => {
-    if (!formData.title) return alert('Escribe el título');
+    if (!formData.title) return alert('Escribe el título para que la IA pueda buscar el libro.');
     setLoadingAI(true);
     try {
-      const d = await getBookDetails(formData.title);
+      // Ahora enviamos título y autor (si existe) para mayor precisión
+      const d = await getBookDetails(formData.title, formData.author);
       setFormData(prev => ({ ...prev, ...d }));
-    } catch (e) { alert('Error con la IA'); }
+    } catch (e) { 
+      alert('Error con la IA: Asegúrate de que el título sea correcto o añade el autor para ayudar a la búsqueda.'); 
+    }
     finally { setLoadingAI(false); }
   };
 
@@ -280,14 +284,13 @@ const App: React.FC = () => {
               />
             </div>
 
-            {/* Panel de Importación/Exportación: Ahora visible para todos */}
             <div className="flex gap-2 bg-slate-900/50 p-1.5 rounded-2xl border border-slate-800 animate-in fade-in zoom-in duration-300">
               {isAdmin && (
                 <button onClick={handleExport} className="p-3 bg-slate-800 hover:bg-rose-600 text-rose-400 hover:text-white rounded-xl transition-all shadow-xl" title="Exportar">
                   <Download size={20} />
                 </button>
               )}
-              <label className="p-3 bg-slate-800 hover:bg-amber-500 text-amber-400 hover:text-black rounded-xl transition-all shadow-xl cursor-pointer" title="Importar">
+              <label className="p-3 bg-slate-800 hover:bg-amber-500 text-amber-400 hover:text-black rounded-xl transition-all shadow-xl cursor-pointer" title="Importar Colección">
                 <Upload size={20} />
                 <input type="file" accept=".json" onChange={handleImport} className="hidden" />
               </label>
@@ -295,7 +298,7 @@ const App: React.FC = () => {
 
             <button 
               onClick={() => isAdmin ? setIsAdmin(false) : setShowLogin(true)}
-              className={`p-3.5 rounded-2xl transition-all ${isAdmin ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'bg-slate-800 text-slate-500'}`}
+              className={`p-3.5 rounded-2xl transition-all ${isAdmin ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'}`}
               title={isAdmin ? "Cerrar Sesión Admin" : "Acceso Administrador"}
             >
               {isAdmin ? <Unlock size={20} /> : <Lock size={20} />}
@@ -470,15 +473,15 @@ const App: React.FC = () => {
                 <div className="md:col-span-6 space-y-2">
                   <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-2">Título</label>
                   <div className="flex gap-2">
-                    <input type="text" className="flex-1 bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm font-bold outline-none focus:border-rose-500" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
-                    {!isEditing && <button onClick={handleAISuggest} disabled={loadingAI} className="px-6 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-500 disabled:opacity-30 flex items-center gap-2 transition-all">
+                    <input type="text" className="flex-1 bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm font-bold outline-none focus:border-rose-500" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="Título del libro..." />
+                    <button onClick={handleAISuggest} disabled={loadingAI} className="px-6 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-500 disabled:opacity-30 flex items-center gap-2 transition-all" title="Completar con IA">
                       {loadingAI ? <div className="animate-spin h-4 w-4 border-2 border-white/20 border-t-white rounded-full" /> : <Sparkles size={20} />}
-                    </button>}
+                    </button>
                   </div>
                 </div>
                 <div className="md:col-span-4 space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-2">Autor</label>
-                  <input type="text" className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm font-bold outline-none focus:border-rose-500" value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} />
+                  <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-2">Autor (Opcional para IA)</label>
+                  <input type="text" className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm font-bold outline-none focus:border-rose-500" value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} placeholder="Autor..." />
                 </div>
                 <div className="md:col-span-2 space-y-2">
                   <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-2">Año</label>
@@ -525,7 +528,7 @@ const App: React.FC = () => {
                   <div className="space-y-4 p-6 bg-slate-950/30 rounded-3xl border border-slate-800/50">
                     <div className="flex items-center gap-2 mb-2">
                       <TagIcon size={14} className="text-rose-500" />
-                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Géneros</label>
+                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Géneros y Temas</label>
                     </div>
                     <div className="flex flex-wrap gap-2 mb-3">
                       {formData.genres?.map(tag => (
@@ -540,7 +543,7 @@ const App: React.FC = () => {
                     <input 
                       type="text" 
                       placeholder="Enter para añadir..." 
-                      className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-[10px] font-bold uppercase outline-none focus:border-rose-500"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-[10px] font-bold outline-none focus:border-rose-500"
                       value={tagInput}
                       onChange={e => setTagInput(e.target.value)}
                       onKeyDown={handleAddTag}
